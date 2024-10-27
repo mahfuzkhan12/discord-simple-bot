@@ -29,13 +29,13 @@ const responses = {
         const serverName = message.guild.name;
 
         const embed = new EmbedBuilder()
-            .setColor('#0099ff')
-            .setTitle(`Image!`)
+            // .setColor('#0099ff')
+            // .setTitle(`Image!`)
             // .setThumbnail(avatarUrl)
             .setTimestamp();
 
         const imageUrl = 'https://img.freepik.com/premium-photo/close-up-bearded-man-with-hat-beard-generative-ai_1028860-68622.jpg?w=1480'; // Replace with your image URL
-        message.reply({ embeds: [embed], files: [imageUrl] });
+        message.reply({ files: [imageUrl] });
         // message.reply({ embeds: [embed], files: [avatarUrl, imageUrl] });
         // message.reply({ embeds: [embed] });
         // message.reply(`Hi ${userName}!`);
