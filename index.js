@@ -10,6 +10,12 @@ const images = [
     'https://img.freepik.com/premium-vector/batman-dark-vector-illustration_969863-67173.jpg',
 ]
 
+function getRandomInt(min, max) {
+    const minCeiled = Math.ceil(min);
+    const maxFloored = Math.floor(max);
+    return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled);
+}
+
 // Array of command objects
 const responses = {
     "!hi": (message) => {
@@ -35,13 +41,13 @@ const responses = {
         const avatarUrl = message.author.displayAvatarURL({ dynamic: true });
         const serverName = message.guild.name;
 
-        const embed = new EmbedBuilder()
-            // .setColor('#0099ff')
-            // .setTitle(`Image!`)
-            // .setThumbnail(avatarUrl)
-            .setTimestamp();
+        // const embed = new EmbedBuilder()
+        //     // .setColor('#0099ff')
+        //     // .setTitle(`Image!`)
+        //     // .setThumbnail(avatarUrl)
+        //     .setTimestamp();
 
-        const imageUrl = 'https://img.freepik.com/premium-photo/close-up-bearded-man-with-hat-beard-generative-ai_1028860-68622.jpg?w=1480'; // Replace with your image URL
+        const imageUrl = images[getRandomInt(0, 3)]
         message.reply({ files: [imageUrl] });
         // message.reply({ embeds: [embed], files: [avatarUrl, imageUrl] });
         // message.reply({ embeds: [embed] });
@@ -49,7 +55,7 @@ const responses = {
     }
 }
 const commands = {
-    "!hi": responses["!hi"], 
+    "!hi": responses["!hi"],
     "!hello": responses["!hi"],
     "!image": responses["!image"],
 }
