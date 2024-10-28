@@ -53,7 +53,7 @@ const responses = {
         //     // .setThumbnail(avatarUrl)
         //     .setTimestamp();
 
-        const imageUrl = images[getRandomInt(0, 3)]
+        const imageUrl = images[getRandomInt(0, images?.length - 1)]
         message.reply({ files: [imageUrl] });
         // message.reply({ embeds: [embed], files: [avatarUrl, imageUrl] });
         // message.reply({ embeds: [embed] });
