@@ -3,6 +3,13 @@ const { token } = require("./config.json");
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
 
+const images = [
+    "https://img.stablecog.com/insecure/2560w/aHR0cHM6Ly9iLnN0YWJsZWNvZy5jb20vMTIwZWE5ZjctYWNmMS00NTUwLTliNjQtZWFiNjk0OWQ5MDVhLmpwZWc.webp",
+    'https://img.freepik.com/premium-photo/close-up-bearded-man-with-hat-beard-generative-ai_1028860-68622.jpg?w=1480',
+    'https://img.freepik.com/premium-photo/batman-neon-colors-standing-front-city-generative-ai_1034474-25600.jpg',
+    'https://img.freepik.com/premium-vector/batman-dark-vector-illustration_969863-67173.jpg',
+]
+
 // Array of command objects
 const responses = {
     "!hi": (message) => {
