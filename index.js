@@ -8,6 +8,12 @@ const images = [
     'https://img.freepik.com/premium-photo/close-up-bearded-man-with-hat-beard-generative-ai_1028860-68622.jpg?w=1480',
     'https://img.freepik.com/premium-photo/batman-neon-colors-standing-front-city-generative-ai_1034474-25600.jpg',
     'https://img.freepik.com/premium-vector/batman-dark-vector-illustration_969863-67173.jpg',
+    'https://i.pinimg.com/736x/5c/2d/4a/5c2d4a824d07eabd17ec1ad147ca12ef.jpg',
+    'https://m.media-amazon.com/images/S/pv-target-images/3de84cca07fc963b66a01a5465c2638066119711e89c707ce952555783dd4b4f.jpg',
+    'https://i.guim.co.uk/img/static/sys-images/Guardian/Pix/pictures/2014/12/10/1418217425767/The-Eye-of-Sauron-008.jpg',
+    'https://cdna.artstation.com/p/assets/images/images/060/710/008/large/seba-endless-sauron.jpg',
+    'https://img.freepik.com/free-photo/fantasy-landscape-floating-islands-illustration_23-2151844169.jpg',
+    'https://img.freepik.com/free-photo/beautiful-mountains-landscape_23-2151151037.jpg'
 ]
 
 function getRandomInt(min, max) {
