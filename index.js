@@ -64,6 +64,7 @@ const commands = {
     "!hi": responses["!hi"],
     "!hello": responses["!hi"],
     "!image": responses["!image"],
+    "!img": responses["!img"],
 }
 
 // Listen for the 'ready' event
