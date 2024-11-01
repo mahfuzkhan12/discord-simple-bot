@@ -13,7 +13,8 @@ const images = [
     'https://i.guim.co.uk/img/static/sys-images/Guardian/Pix/pictures/2014/12/10/1418217425767/The-Eye-of-Sauron-008.jpg',
     'https://cdna.artstation.com/p/assets/images/images/060/710/008/large/seba-endless-sauron.jpg',
     'https://img.freepik.com/free-photo/fantasy-landscape-floating-islands-illustration_23-2151844169.jpg',
-    'https://img.freepik.com/free-photo/beautiful-mountains-landscape_23-2151151037.jpg'
+    'https://img.freepik.com/free-photo/beautiful-mountains-landscape_23-2151151037.jpg',
+    'https://png.pngtree.com/thumb_back/fh260/background/20240913/pngtree-beautiful-nature-scenery-wallpaper-view-image_16172461.jpg'
 ]
 
 function getRandomInt(min, max) {
