@@ -20,6 +20,14 @@ const prompts = [
         name: 'solved',
         description: 'Close the current thread as solved.',
     },
+    {
+        name: 'tolive',
+        description: 'Ready to be live',
+    },
+    {
+        name: 'testing',
+        description: 'Testing',
+    },
 ];
 
 const rest = new REST({ version: '10' }).setToken(token);
@@ -101,18 +109,37 @@ client.on('messageCreate', async (message) => {
 
 
 client.on("interactionCreate", async interaction => {
-    // Check if the interaction is a command
     if (!interaction.isCommand()) return;
-
-    // Check if the command is /solved
+    
     if (interaction.commandName === "solved") {
-        // Verify if the command was used in a thread
         if (interaction.channel.isThread()) {
-            // Send the reply first, then archive the thread
             await interaction.reply("Thread closed as resolved.");
             await interaction.channel.setArchived(true);
         } else {
-            // Inform the user that the command can only be used in a thread
+            await interaction.reply("This command can only be used within a thread.");
+        }
+    }else if (interaction.commandName === "tolive") {
+        if (interaction.channel.isThread()) {
+            let name = interaction.channel.name
+            name = name?.replace("[Testing] - ", "").replace("[Ready to be live] - ", '')
+            const newTitle = `[Ready to be live] - ${name}`;
+            await interaction.channel.setName(newTitle);
+
+            // Send the reply before archiving the thread
+            await interaction.reply("Ready to be live");
+        } else {
+            await interaction.reply("This command can only be used within a thread.");
+        }
+    }else if (interaction.commandName === "testing") {
+        if (interaction.channel.isThread()) {
+            let name = interaction.channel.name
+            name = name?.replace("[Testing]", "").replace("[Ready to be live]", '')
+            const newTitle = `[Testing] - ${name}`;
+            await interaction.channel.setName(newTitle);
+
+            // Send the reply before archiving the thread
+            await interaction.reply("Testing is in progress");
+        } else {
             await interaction.reply("This command can only be used within a thread.");
         }
     }
