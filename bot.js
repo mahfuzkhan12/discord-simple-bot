@@ -105,7 +105,8 @@ client.on('messageCreate', async (message) => {
 
 client.on("interactionCreate", async interaction => {
     if (!interaction.isCommand()) return;
-    
+
+
     if (interaction.commandName === "solved") {
         if (interaction.channel.isThread()) {
             try {
