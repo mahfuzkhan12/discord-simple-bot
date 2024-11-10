@@ -1,10 +1,18 @@
 const { Client, GatewayIntentBits, REST, Routes, EmbedBuilder } = require("discord.js");
-// const { token } = require("./config.json");
 require("dotenv").config();
 
 const token = process.env.DISCORD_TOKEN
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
+// const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
+const client = new Client({
+    intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.GuildMessageReactions,
+        GatewayIntentBits.GuildMembers,
+        GatewayIntentBits.MessageContent
+    ]
+});
 
 const images = [];
 
@@ -35,12 +43,9 @@ const rest = new REST({ version: '10' }).setToken(token);
 
 (async () => {
     try {
-      console.log('Started refreshing application (/) commands globally.');
-  
-      // Register the command globally (for all servers)
+    //   console.log('Started refreshing application (/) commands globally.');
       await rest.put(Routes.applicationCommands("1299432912235659376"), { body: prompts });
-  
-      console.log('Successfully reloaded application (/) commands globally.');
+    //   console.log('Successfully reloaded application (/) commands globally.');
     } catch (error) {
       console.error(error);
     }
@@ -66,10 +71,10 @@ const responses = {
 };
 
 const commands = {
-    "!hi": responses["!hi"],
-    "!hello": responses["!hi"],
-    "!image": responses["!image"],
-    "!img": responses["!image"],
+    // "!hi": responses["!hi"],
+    // "!hello": responses["!hi"],
+    // "!image": responses["!image"],
+    // "!img": responses["!image"],
 };
 
 // Listen for the 'ready' event
@@ -77,9 +82,7 @@ client.once('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
 
-// Listen for the 'messageCreate' event
 client.on('messageCreate', async (message) => {
-    // Ignore messages from bots
     if (message.author.bot) return;
 
     // Respond to mentions
@@ -93,18 +96,10 @@ client.on('messageCreate', async (message) => {
         message.reply({ embeds: [embed] });
     }
 
-    // Check if message content matches any command
     const command = commands[message.content];
     if (command) {
         command(message);
     }
-    console.log(message.channel.isThread(), "IS THREAD")
-
-    // // Archive thread if "SOLVED" is in the message and it's in a thread
-    // if (message.content.toUpperCase().includes("SOLVED") && message.channel.isThread()) {
-    //     await message.channel.setArchived(true);
-    //     message.channel.send("Thread closed as resolved.");
-    // }
 });
 
 
@@ -113,19 +108,33 @@ client.on("interactionCreate", async interaction => {
     
     if (interaction.commandName === "solved") {
         if (interaction.channel.isThread()) {
-            await interaction.reply("Thread closed as resolved.");
-            await interaction.channel.setArchived(true);
+            try {
+                await interaction.deferReply();
+
+                let name = interaction.channel.name;
+                name = name.replace("[Testing] - ", "").replace("[Ready to be live] - ", '').replace("[Solved] - ", '')
+        
+                const newTitle = `[Solved] - ${name}`;
+                // console.log(newTitle, "name");
+                await interaction.channel.setName(newTitle);
+        
+                await interaction.channel.setArchived(true);
+        
+                await interaction.followUp("Thread closed as resolved.");
+            } catch (error) {
+                // console.log("Error archiving thread:", error);
+                await interaction.followUp("There was an error closing the thread.");
+            }
         } else {
             await interaction.reply("This command can only be used within a thread.");
         }
     }else if (interaction.commandName === "tolive") {
         if (interaction.channel.isThread()) {
             let name = interaction.channel.name
-            name = name?.replace("[Testing] - ", "").replace("[Ready to be live] - ", '')
+            name = name?.replace("[Testing] - ", "").replace("[Ready to be live] - ", '').replace("[Solved] - ", '')
             const newTitle = `[Ready to be live] - ${name}`;
             await interaction.channel.setName(newTitle);
 
-            // Send the reply before archiving the thread
             await interaction.reply("Ready to be live");
         } else {
             await interaction.reply("This command can only be used within a thread.");
@@ -133,17 +142,49 @@ client.on("interactionCreate", async interaction => {
     }else if (interaction.commandName === "testing") {
         if (interaction.channel.isThread()) {
             let name = interaction.channel.name
-            name = name?.replace("[Testing]", "").replace("[Ready to be live]", '')
+            name = name?.replace("[Testing] - ", "").replace("[Ready to be live] - ", '').replace("[Solved] - ", '')
             const newTitle = `[Testing] - ${name}`;
             await interaction.channel.setName(newTitle);
 
-            // Send the reply before archiving the thread
             await interaction.reply("Testing is in progress");
         } else {
             await interaction.reply("This command can only be used within a thread.");
         }
     }
 });
+
+async function fetchGuildMembers(guild, retries = 3) {
+    for (let attempt = 1; attempt <= retries; attempt++) {
+        try {
+            return await guild.members.fetch();
+        } catch (error) {
+            if (error.code === 'GuildMembersTimeout' && attempt < retries) {
+                // console.log(`Retrying fetch attempt ${attempt}...`);
+                await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+            } else {
+                throw error;
+            }
+        }
+    }
+}
+
+
+client.on("threadCreate", async (thread) => {
+    try {
+        const members = await fetchGuildMembers(thread.guild);
+
+        for (const [memberId, member] of members) {
+            if (!member.user.bot && thread.guild.members.me.permissionsIn(thread.parent).has("VIEW_CHANNEL")) {
+                await thread.members.add(memberId);
+            }
+        }
+
+        // console.log("All available members have been added to the thread.");
+    } catch (error) {
+        console.error("Error adding members to the thread:", error);
+    }
+});
+
 
 // Log in to Discord
 client.login(token);
